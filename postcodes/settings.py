@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'corsheaders',
+    'districts',
 ]
 
 MIDDLEWARE = [
@@ -79,8 +80,12 @@ WSGI_APPLICATION = 'postcodes.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': get_env_variable('DB_ENGINE', 'django.db.backends.sqlite3', required=True),
+        'NAME': get_env_variable('DB_NAME', 'postcodes'),
+        'USER': get_env_variable('DB_USER', 'postgres'),
+        'PASSWORD': get_env_variable('DB_PASSWORD', 'some_password'),
+        'HOST': get_env_variable('DB_HOST', 'localhost'),
+        'PORT': get_env_variable('DB_PORT', 5432),
     }
 }
 
