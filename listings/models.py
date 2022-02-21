@@ -1,6 +1,3 @@
-from email.policy import default
-from random import choices
-from unicodedata import name
 from django.db import models
 
 
@@ -13,7 +10,7 @@ class Listing(models.Model):
 
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=False, null=False)
-    host_id = models.IntegerField(null=True, blank=True)
+    host_id = models.IntegerField(null=False, blank=False)
     host_name = models.CharField(max_length=255, blank=False, null=False)
     neighbourhood_group = models.CharField(max_length=255)
     neighbourhood = models.CharField(max_length=255)
@@ -22,11 +19,15 @@ class Listing(models.Model):
     room_type = models.CharField(
         max_length=20, choices=RoomType.choices, null=False, blank=False)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    minimum_nights = models.IntegerField(null=False, blank=True)
-    number_of_reviews = models.IntegerField(null=False, blank=True)
-    last_review = models.DateField(blank=True)
+    minimum_nights = models.IntegerField(null=True, blank=True)
+    number_of_reviews = models.IntegerField(blank=True, null=True)
+    last_review = models.DateField(blank=True, null=True)
+    reviews_per_month = models.FloatField(blank=True, null=True)
     calculated_host_listings_count = models.IntegerField()
-    availability_365 = models.IntegerField()
-    number_of_reviews_ltm = models.IntegerField()
-    license = models.CharField(max_length=255, null=False, blank=False)
+    availability_365 = models.IntegerField(blank=True, null=True)
+    number_of_reviews_ltm = models.IntegerField(blank=True, null=True)
+    license = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'Name: {self.name}, Neighbourhood: {self.neighbourhood_group}, Price: ${self.price}' 
     

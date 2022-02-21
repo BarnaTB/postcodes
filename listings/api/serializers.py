@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from districts.models import Listing
+from listings.models import Listing
 
 
 class ListingSerializer(serializers.ModelSerializer):
