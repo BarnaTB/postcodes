@@ -14,8 +14,8 @@ class ListingFactory(factory.django.DjangoModelFactory):
     name = "Central Wigan welcoming 2 bed Townhouse sleeps 6"
     host_id = 375437396
     host_name = "Susie"
-    neighbourhood_group = "Wigan"
-    neighbourhood = "Wigan District"
+    neighbourhood_group = "Manchester"
+    neighbourhood = "Manchester"
     latitude = 53.547343
     longitude = -2.635878
     price = 48.00
