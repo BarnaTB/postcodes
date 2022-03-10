@@ -29,3 +29,31 @@ class RetrieveListingsTestCase(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data["detail"], "Outcode not found")
+
+
+class RetrieveNearestPostcodeViewTestCase(TestCase):
+    def setUp(self):
+        self.listing = ListingFactory()
+        self.neighbouring_listing = ListingFactory(id=50, neighbourhood_group="Oldham")
+
+    def test_retrieve_listings_successfully(self):
+        """Test that a user can retrieve nearest listings to nexus outcode 
+        nexus outcode
+        """
+        self.url = reverse("listings:retrieve_nearest_outcodes",
+                           kwargs={"outcode": "M11"}
+                           )
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data["outcodes"])
+        self.assertEqual(response.data["average_daily_price"], "$48.00")
+
+    def test_retrieve_listings_no_data(self):
+        """Test that a user gets an appropriate error message when there's no data
+        """
+        self.url = reverse("listings:retrieve_nearest_outcodes",
+                           kwargs={"outcode": "M11678"}
+                           )
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data["detail"], "Outcode not found")
