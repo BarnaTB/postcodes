@@ -1,3 +1,4 @@
+from enum import unique
 import requests
 
 from rest_framework import generics
@@ -54,37 +55,39 @@ class RetrieveNearestPostcodeView(generics.RetrieveAPIView):
         nexus_outcode = response["result"][0]
         nexus_outcode_coordinates = (
             nexus_outcode["latitude"], nexus_outcode["longitude"])
-        
-        nexus_listing_count = 0
-        nexus_listing_average_prices = []
 
         outcodes = []
 
-        for outcode in response["result"]:
-            listings = self.queryset.filter(
-                neighbourhood_group__in=outcode["admin_district"])
+        admin_districts = [outcode["admin_district"]
+                              for outcode in response["result"]]
+        unique_districts = set().union(*admin_districts)
 
-            listings_prices = [listing.price for listing in listings]
-            listing_count = len(listings)
-            nexus_listing_count += listing_count
-            average_daily_price = average(listings_prices, 2)
-            nexus_listing_average_prices.append(average_daily_price)
+        nexus_listings = self.queryset.filter(neighbourhood_group__in=unique_districts)
+
+        nexus_listings_prices = [listing.price for listing in nexus_listings]
+        nexus_listing_average_price = average(nexus_listings_prices, round_to=2)
+        nexus_listing_count = len(nexus_listings)
+
+        for outcode in response["result"]:
+            outcode_listings = [
+                listing for listing in nexus_listings if listing.neighbourhood_group in outcode["admin_district"]]
+
+            outcode_listing_prices = [listing.price for listing in outcode_listings]
+            outcode_average_daily_price = average(outcode_listing_prices, 2)
+
+            outcode_listings_count = len(outcode_listings)
 
             outcode_coordinates = (outcode["latitude"], outcode["longitude"])
             distance_from_nexus = calculate_distance(
                 outcode_coordinates, nexus_outcode_coordinates, round_to=2)
-            
+
             outcode = {
-                "listing_count": listing_count,
-                "average_daily_price": f"{average_daily_price}",
+                "listing_count": outcode_listings_count,
+                "average_daily_price": f"${outcode_average_daily_price}",
                 "distance": distance_from_nexus
             }
-
             outcodes.append(outcode)
         
-        nexus_listing_average_price = average(
-            nexus_listing_average_prices, round_to=2)
-
         response = {
             "nexus": nexus_outcode,
             "listing_count": nexus_listing_count,
