@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'corsheaders',
-    'drf_yasg',
+    'rest_framework_swagger',
     'rest_framework',
     'rest_framework_xml',
 
@@ -68,6 +68,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework_xml.renderers.XMLRenderer",
     ),
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema"
 }
 
 ROOT_URLCONF = 'postcodes.urls'

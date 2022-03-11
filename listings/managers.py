@@ -21,7 +21,6 @@ class ListingManager(object):
             model.objects.bulk_create(self._listings_queue[model_key])
         except IntegrityError:
             for item in self._listings_queue[model_key]:
-                print(type(item))
                 defaults = item.__dict__
                 del defaults['_state']
                 model.objects.update_or_create(id=item.id, defaults=defaults)

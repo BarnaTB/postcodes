@@ -2,12 +2,10 @@
 The product is built on the following stack:
 
 * Python 3.8
-* Celery
-* RabbitMQ
-* PostgreSQL
-* Virtualenv
+* PostgreSQL 11
+* Docker
 
-Ensure you have Docker and Make installed and running prior to the steps that follow.
+Ensure you have Docker, docker-compose and Make installed and running prior to the steps that follow.
 
 ## Installing
 
@@ -19,21 +17,32 @@ $ git clone https://github.com/BarnaTB/postcodes.git
 
 # open the project directory
 $ cd postcodes
-
-# build the project and all its dependencies
-$ make build
-
-# run the application
-$ make up
-
-# in a separate terminal session, create a superuser for your project
-$ make createsuperuser
 ```
+
+- Create a `.env` file your current directory
+- Copy the contents of the `.env.example` file and paste it in your `.env` file and follow the comments in there to set up the required environment variables
 
 - Navigate to the django-admin interface by visiting http://localhost:8000/admin/ in your browser and login with the credentials you just created
 - Click the `Listings` model in left nav bar adjuscent ot the `Add` button, click `Upload a csv` to upload a csv of your listings data
 
-The project should be ready to run now so run `python manage.py runserver` and hit the endpoints according to the [documentation here](https://fulfilproductimporter.herokuapp.com/api/v1/docs/).
+- Using your api client of choice, hit the following endpoints both with `GET` requests.
+
+`api/outcode/{outcode}`
+
+`api/nexus/{outcode}`
+
+where `outcode` is the first part of the UK postal code e.g M11
 
 ## Running the tests
 Run the tests by running `make test` or `make test APP=<insert-app-name>` to run app specific tests
+
+## To-do
+
+The tasks below are still pending.
+- Appropriate API documentation
+- CI/CD
+- Deployment to a cloud PaaS(Heroku, or Digital Ocean)
+
+## Acknowledgement
+
+Many thanks to the team at [Pass The Keys](https://passthekeys.co.uk/) for all the support on the project
