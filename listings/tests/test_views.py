@@ -47,6 +47,7 @@ class RetrieveNearestPostcodeViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data["outcodes"])
         self.assertEqual(response.data["average_daily_price"], "$48.00")
+        self.assertEqual(response.data["listing_count"], 2)
 
     def test_retrieve_listings_no_data(self):
         """Test that a user gets an appropriate error message when there's no data
