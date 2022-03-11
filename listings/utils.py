@@ -1,5 +1,8 @@
+from statistics import StatisticsError, mean
+
 from geopy import distance
-from statistics import mean
+
+from rest_framework.exceptions import ValidationError
 
 def average(number_list: list, round_to: int) -> float:
     """Helper function to compute the average of list of numbers
@@ -8,7 +11,11 @@ def average(number_list: list, round_to: int) -> float:
         number_list[list]: A list of numbers whose average is to be computed
         round_to[int]: integer to which the average should be rounded
     """
-    average_price = mean(number_list)
+    try:
+        average_price = mean(number_list)
+    except StatisticsError:
+        raise ValidationError(
+            "Please upload some listings data using the django-admin!")
     return round(average_price, round_to)
 
 
